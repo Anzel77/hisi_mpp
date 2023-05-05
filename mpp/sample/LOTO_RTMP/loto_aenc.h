@@ -11,7 +11,15 @@ typedef struct tagLOTO_AENC_S {
     pthread_t   stAencPid;
 } LOTO_AENC_S;
 
+#ifdef __cplusplus
+extern "C" {
+#endif
+
 void *LOTO_AENC_CLASSIC(void *p);
 
+
+#ifdef __cplusplus
+}
+#endif
 
 #endif // LOTO_AENC_H

@@ -15,3 +15,4 @@
 4. http
 5. cJOSN
 6. [libopus](https://www.opus-codec.org/)
+7. [libfdk-aac](https://github.com/mstorsjo/fdk-aac)

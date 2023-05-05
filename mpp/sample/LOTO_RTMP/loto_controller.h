@@ -37,8 +37,26 @@ typedef struct ControlPacket {
     uint16_t checksum;
 } ControlPacket;
 
+
+#ifdef __cplusplus
+extern "C" {
+#endif
+
+/**
+ * @brief create a server thread
+ */
 void *server_thread(void *arg);
 
+/**
+ * @brief create a client thread
+ * 
+ * @param arg server address
+ */
 void *client_thread(void *arg);
+
+#ifdef __cplusplus
+}
+#endif
+
 
 #endif

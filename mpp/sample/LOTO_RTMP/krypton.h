@@ -15,6 +15,10 @@ typedef struct ssl_st SSL;
 typedef struct ssl_ctx_st SSL_CTX;
 typedef struct ssl_method_st SSL_METHOD;
 
+#ifdef __cplusplus
+extern "C" {
+#endif
+
 int SSL_library_init_0(void);
 SSL *SSL_new_0(SSL_CTX *ctx);
 int SSL_set_fd_0(SSL *ssl, int fd);
@@ -84,5 +88,9 @@ typedef struct {
   void (*decrypt)(void *ctx, const unsigned char *msg, int len, unsigned char *out);
   void (*free_ctx)(void *ctx);
 } kr_cipher_info;
+
+#ifdef __cplusplus
+}
+#endif
 
 #endif /* CS_KRYPTON_KRYPTON_H_ */

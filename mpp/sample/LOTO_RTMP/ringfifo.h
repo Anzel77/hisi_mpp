@@ -14,6 +14,11 @@ struct ringbuf
     unsigned long long timestamp;
     unsigned long long getframe_timestamp;
 };
+
+#ifdef __cplusplus
+extern "C" {
+#endif
+
 int addring(int i);
 int ringget(struct ringbuf *getinfo);
 void ringput(unsigned char *buffer, int size, int encode_type);
@@ -30,5 +35,9 @@ void ringreset_audio();
 HI_S32 HisiPutAACDataToBuffer(AUDIO_STREAM_S *aacStream);
 HI_S32 HisiPutH264DataToBuffer(VENC_STREAM_S *pstStream);
 HI_S32 HisiPutOpusDataToBuffer(HI_U8 *opus_data, HI_U32 data_size, HI_U64 timestamp);
+
+#ifdef __cplusplus
+}
+#endif
 
 #endif

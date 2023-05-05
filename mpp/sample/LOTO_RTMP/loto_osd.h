@@ -103,13 +103,14 @@ typedef struct loto_OSD_HANDLE {
 } OsdHanlde;
 
 
+#ifdef __cplusplus
+extern "C" {
+#endif
 
 HI_S32 LOTO_OSD_CreateVideoOsdThread(HI_VOID);
 
-
-
-
-
-
+#ifdef __cplusplus
+}
+#endif
 
 #endif // LOTO_OSD_H

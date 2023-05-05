@@ -44,6 +44,14 @@ typedef struct OPUS_THREAD_ARG
     HI_BOOL start;
 } OPUS_THREAD_ARG;
 
+#ifdef __cplusplus
+extern "C" {
+#endif
+
 void *LOTO_OPUS_AudioEncode(void *p);
+
+#ifdef __cplusplus
+}
+#endif
 
 #endif // LOTO_OPUS_H

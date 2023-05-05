@@ -8,11 +8,13 @@ TARGET := loto_rtmp
 INC_FLAGS += -I./audio_adp
 INC_FLAGS += -I../librtmp
 INC_FLAGS += -I$(INC_DIR)/opus
+INC_FLAGS += -I$(INC_DIR)/fdk-aac
 
 RTMP_LIBS+=../librtmp/librtmp.a
 RTMP_LIBS+=../openssl-1.0.1p/arm/lib/libssl.a
 RTMP_LIBS+=../openssl-1.0.1p/arm/lib/libcrypto.a 
 RTMP_LIBS+=../zlib-1.2.8/arm/lib/libz.a
+RTMP_LIBS+=$(LIB_DIR)/fdk-aac/libfdk-aac.a
 
 CFLAGS += -L$(REL_LIB) -lsecurec -Wl,-rpath=/usr/lib
 
@@ -49,6 +51,7 @@ all: $(TARGET)
 
 $(TARGET):$(OBJS)
 	@$(CC) $(CFLAGS) -lpthread -lm -o $@ $^ -Wl,--start-group $(MPI_LIBS) $(SENSOR_LIBS) $(AUDIO_LIBA) $(REL_LIB)/libsecurec.a $(RTMP_LIBS) -Wl,--end-group
+#	@$(CXX) $(CFLAGS) -lpthread -lm -o $@ $^ -Wl,--start-group $(MPI_LIBS) $(SENSOR_LIBS) $(AUDIO_LIBA) $(REL_LIB)/libsecurec.a $(RTMP_LIBS) -Wl,--end-group
 
 clean:
 	@rm -f $(TARGET)

@@ -250,7 +250,7 @@ loto_room_info *loto_room_init()
 {
     loto_room_info *pRoomInfo = NULL;
     char szServerUrl[256] = "https://t.zhuagewawa.com/admin/room/register.pusher";
-    // char szServerUrl[256] = "http://t.zhuagewawa.com/admin/room/register.pusher";
+    // char szServerUrl[256] = "https://r.zhuagewawa.com/admin/room/register.pusher";
     // strcpy(szServerUrl, GetIniKeyString((char*)"server", (char*)"url", (char*)"/home/pi/wawaji/WaController/server.ini"));
     if (strlen(szServerUrl) > 0)
     {

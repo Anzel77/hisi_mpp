@@ -728,6 +728,7 @@ void *LOTO_OPUS_AudioEncode(void *p)
     stAioAttr.enI2sType = AIO_I2STYPE_INNERCODEC;
 
     s32AiChnCnt = stAioAttr.u32ChnCnt;
+    
     do
     {
         /* Initialize AI */

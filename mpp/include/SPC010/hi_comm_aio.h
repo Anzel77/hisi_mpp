@@ -169,7 +169,7 @@ typedef struct hiAIO_ATTR_S
     AUDIO_SAMPLE_RATE_E enSamplerate;   /* sample rate */
     AUDIO_BIT_WIDTH_E   enBitwidth;     /* bitwidth */
     AIO_MODE_E          enWorkmode;     /* master or slave mode */
-    AUDIO_SOUND_MODE_E  enSoundmode;    /* momo or steror */
+    AUDIO_SOUND_MODE_E  enSoundmode;    /* momo or stereo */
     HI_U32              u32EXFlag;      /* expand 8bit to 16bit,use AI_EXPAND(only valid for AI 8bit),use AI_CUT(only valid for extern Codec for 24bit) */
     HI_U32              u32FrmNum;      /* frame num in buf[2,MAX_AUDIO_FRAME_NUM] */
     HI_U32              u32PtNumPerFrm; /* point num per frame (80/160/240/320/480/1024/2048)
