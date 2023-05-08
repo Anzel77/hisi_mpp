@@ -34,8 +34,8 @@
 #include "WaInit.h"
 #include "loto_aac.h"
 
-#define AUDIO_ENCODER_AAC     0xAC
-#define AUDIO_ENCODER_OPUS    0xFF
+#define AUDIO_ENCODER_AAC       0xAC
+#define AUDIO_ENCODER_OPUS      0xFF
 
 typedef struct RtmpThrArg {
     char *url;
@@ -55,11 +55,33 @@ char g_device_num[16];
 PIC_SIZE_E g_resolution;
 PAYLOAD_TYPE_E g_payload = PT_BUTT;
 
-static char gs_url_buf[1024] = {0};
+// static char gs_server_url_buf[1024] = {0};
+static char gs_push_url_buf[1024] = {0};
 // static int g_pushurl_switch = 0;
 int g_profile = -1;
 static int gs_audio_state = -1;
 static int gs_audio_encoder = -1;
+
+static int gs_server_option = SERVER_TEST;
+
+static int gs_cover_switch = 0;
+static int gs_cover_state = COVER_OFF;
+
+void get_server_option(int *server_option) {
+    *server_option = gs_server_option;
+}
+
+void set_server_option(int *server_option) {
+    gs_server_option = *server_option;
+}
+
+void get_cover_state(int *cover_state) {
+    *cover_state = gs_cover_state;
+}
+
+void set_cover_switch(int *cover_switch) {
+    gs_cover_switch = *cover_switch;
+}
 
 HI_S32 LOTO_RTMP_VA_CLASSIC()
 {
@@ -128,17 +150,6 @@ HI_S32 LOTO_RTMP_VA_CLASSIC()
     LOGI("vid = %#x, aid = %#x\n", vid, aid);
 
     return s32Ret;
-}
-
-static int gs_cover_switch = 0;
-static int gs_cover_state = COVER_OFF;
-
-void get_cover_state(int *cover_state) {
-    *cover_state = gs_cover_state;
-}
-
-void set_cover_switch(int *cover_switch) {
-    gs_cover_switch = *cover_switch;
 }
 
 void *LOTO_VIDEO_AUDIO_RTMP(void *p)
@@ -259,14 +270,28 @@ void *LOTO_VIDEO_AUDIO_RTMP(void *p)
 }
 
 void parse_config_file(const char *config_file_path){
-    /* url */
-    strcpy(gs_url_buf, GetIniKeyString("push", "push_url", config_file_path));
-    if (strncmp("on", GetIniKeyString("push", "requested_url", config_file_path), 2) == 0) {
-        loto_room_info *pRoomInfo = loto_room_init();
-        memset(gs_url_buf, 0, sizeof(gs_url_buf));
-        strcpy(gs_url_buf, pRoomInfo->szPushURL);
+    /* get server url */
+    char server_url[1024];
+    if (gs_server_option == SERVER_TEST) {
+        strcpy(server_url, GetIniKeyString("push", "test_server_url", config_file_path));
+    } else if (gs_server_option == SERVER_OFFI) {
+        strcpy(server_url, GetIniKeyString("push", "offi_server_url", config_file_path));
     }
-    LOGI("push_url = %s\n", gs_url_buf);
+    LOGI("server_url = %s\n", server_url);
+
+    /* get server token */
+    char server_token[1024] = {0};
+    strcpy(server_token, GetIniKeyString("push", "server_token", config_file_path));
+    // LOGD("server_token = %s\n", server_token);
+
+    /* push_url */
+    strcpy(gs_push_url_buf, GetIniKeyString("push", "push_url", config_file_path));
+    if (strncmp("on", GetIniKeyString("push", "requested_url", config_file_path), 2) == 0) {
+        loto_room_info *pRoomInfo = loto_room_init(server_url, server_token);
+        memset(gs_push_url_buf, 0, sizeof(gs_push_url_buf));
+        strcpy(gs_push_url_buf, pRoomInfo->szPushURL);
+    }
+    LOGI("push_url = %s\n", gs_push_url_buf);
 
     /* resolution */
     char *resolution = GetIniKeyString("push", "resolution", config_file_path);
@@ -344,8 +369,8 @@ void parse_config_file(const char *config_file_path){
 
 #define VER_MAJOR 1
 #define VER_MINOR 4
-#define VER_BUILD 2
-#define VER_EXTEN 1
+#define VER_BUILD 3
+#define VER_EXTEN 7
 
 int main(int argc, char *argv[]) {
     int s32Ret;
@@ -365,6 +390,10 @@ int main(int argc, char *argv[]) {
         LOGE("Time sync failed\n");
         exit(1);
     }
+
+    /* socket: server */
+    pthread_t socket_server_pid;
+    pthread_create(&socket_server_pid, NULL, server_thread, NULL);
 
     /* get global variables from config file */
     parse_config_file(config_file_path);
@@ -412,17 +441,14 @@ int main(int argc, char *argv[]) {
 
     /* Initialize rtmp_sender */
     RtmpThrArg *rtmp_attr = (RtmpThrArg *)malloc(sizeof(RtmpThrArg));
-    rtmp_attr->url = gs_url_buf;
+    rtmp_attr->url = gs_push_url_buf;
     rtmp_attr->rtmp_xiecc = rtmp_sender_alloc((const char *)rtmp_attr->url);
 
     /* Push video and audio stream through rtmp. */
     pthread_t rtmp_pid;
     pthread_create(&rtmp_pid, NULL, LOTO_VIDEO_AUDIO_RTMP, (void *)rtmp_attr);
 
-    pthread_t socket_server_pid;
-    pthread_create(&socket_server_pid, NULL, server_thread, NULL);
     pthread_join(socket_server_pid, 0);
-
     pthread_join(rtmp_pid, 0);
 
     LOTO_RGN_UninitCoverRegion();

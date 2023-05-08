@@ -52,16 +52,13 @@ Module.symvers
 Mkfile.old
 dkms.conf
 
+# bin file
 mpp/sample/LOTO_RTMP/loto_rtmp
 rtmp_pack/kit/root/loto_rtmp
 
+# Compressed file
+rtmp_pack.tgz
+
 # essential lib
-!mpp/lib/fdk-aac/*.a
-!mpp/lib/fdk-aac/*.la
-!mpp/lib/fdk-aac/*.so*
-
-!mpp/lib/SPC010/*.a
-!mpp/lib/SPC010/*.so
-
-!mpp/lib/SPC020/*.a
-!mpp/lib/SPC020/*.so
+!mpp/lib/*/*a
+!mpp/lib/*/*so*

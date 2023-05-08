@@ -177,6 +177,8 @@ int time_sync();
 
 void HexToString(const uint8_t *data, unsigned long len);
 
+int get_mac(char *mac);
+
 #ifdef __cplusplus
 }
 #endif
